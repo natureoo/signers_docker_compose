@@ -13,7 +13,13 @@ besu-docker-compose-besu-1  | 2022-01-04 09:31:21.700+00:00 | vert.x-eventloop-t
 
 From another terminal, use curl to connect to Besu (via TLS - mutual client auth)
 ~~~
+ Got issue
 curl --cacert ./client1/besu.pem --cert-type P12 --cert ./client1/client1_keystore.p12:changeit \
+ -X POST --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+ https://localhost:8545
+ 
+ Worked
+ curl --cacert ./client1/besu.pem --cert-type P12 --cert ./client1/client1.pem --key ./client1/client_key.pem \
  -X POST --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
  https://localhost:8545
  ~~~
@@ -38,6 +44,12 @@ keytool -exportcert -rfc -keystore ./config/tls/keystore.p12 -alias besu -storep
 ~~~
 keytool -genkeypair -keystore ./client1/client1_keystore.p12 -storetype PKCS12 -storepass changeit -alias client1 \
 -keyalg RSA -keysize 2048 -validity 700 -dname "CN=client1, OU=PegaSys, O=ConsenSys, L=Brisbane, ST=QLD, C=AU"
+
+Export cert
+keytool -exportcert -rfc -keystore ./client1/client1_keystore.p12  -alias client1 -storepass changeit -file ./client1/client1.pem
+
+Export private key
+openssl pkcs12 -in ./client1/client1_keystore.p12 -nodes -nocerts -out ./client1/client_key.pem
 ~~~
 
 4. Obtain sha256 signature of client1
