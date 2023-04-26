@@ -2,7 +2,11 @@
 
 Bring Besu up
 ~~~
+Docker
 docker compose up
+
+Binary
+besu --config-file=./config/config.toml
 ~~~
 
 Should result in log similar to:
